@@ -15,7 +15,7 @@ import sys.io.File;
 import h3d.prim.Instanced;
 import h3d.impl.InstanceBuffer;
 import h3d.Buffer.BufferFormat;
-import h3d.prim.Quad;
+import h3d.prim.Plane2D;
 import viewer.SplatShader; // Our custom shader
 import h3d.Engine; // For screenResolution
 
@@ -140,8 +140,8 @@ class ViewerMain extends App {
             }
             instanceBuffer.upload(instanceData);
 
-            // Create a simple Quad as the base primitive to be instanced
-            var basePrimitive = new Quad();
+            // Create a simple quad as the base primitive to be instanced
+            var basePrimitive = new Plane2D();
 
             // Create the Instanced primitive and link the instance buffer
             var instancedPrimitive = new Instanced();

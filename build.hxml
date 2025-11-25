@@ -19,7 +19,6 @@
 -lib heaps
 -lib format
 -lib hlsdl
--lib hxsl
 -cp src
 -main viewer.ViewerMain
 -hl bin/viewer.hl
