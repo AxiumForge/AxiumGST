@@ -23,6 +23,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Fixed
 
+### Notes
+- **Development Environment:** Currently developing on a Mac Intel i9 16GB (2019). The initial development will be "light" to establish a working pipeline.
+- **Target Environment:** The future target is an Ubuntu AMD AI9 365 with 128GB shared RAM (2025). Once the pipeline is functional, development will transition to Ubuntu to leverage full GPU, NPU, and AMU capabilities.
+
 ---
 
 ## [0.1.0] - 2025-11-25
