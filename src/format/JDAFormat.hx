@@ -26,7 +26,7 @@ class JDAFormat {
             throw "Invalid JDA format: Missing required fields.";
         }
 
-        var gstBytes:Bytes = Base64.decode(Bytes.ofString(binaryDataString));
+        var gstBytes:Bytes = Base64.decode(binaryDataString); // Corrected this line
 
         return {assetType: assetType, metadata: metadata, gstBytes: gstBytes};
     }

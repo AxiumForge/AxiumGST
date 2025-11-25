@@ -7,6 +7,9 @@ import haxe.zip.Compress;
 import haxe.zip.Uncompress;
 import Sys;
 import sys.io.File;
+import format.JDAFormat;
+import haxe.Json; // Used for JDA metadata, specifically Date.now().toString()
+import haxe.Timer; // Used for Date.now()
 
 class ForgeMain {
     public static function main() {
@@ -47,12 +50,29 @@ class ForgeMain {
                     } else {
                         trace("Usage: uncompress <input_gst_file.gst> <output_gst_file.gst>");
                     }
+                case "encapsulate-jda":
+                    if (args.length >= 4) {
+                        var inputGstPath = args[1];
+                        var outputJdaPath = args[2];
+                        var assetName = args[3];
+                        encapsulateJDA(inputGstPath, outputJdaPath, assetName);
+                    } else {
+                        trace("Usage: encapsulate-jda <input_gst_file.gst> <output_jda_file.jda> <asset_name>");
+                    }
+                case "decapsulate-jda":
+                    if (args.length >= 3) {
+                        var inputJdaPath = args[1];
+                        var outputGstPath = args[2];
+                        decapsulateJDA(inputJdaPath, outputGstPath);
+                    } else {
+                        trace("Usage: decapsulate-jda <input_jda_file.jda> <output_gst_file.gst>");
+                    }
                 default:
                     trace("Unknown command: " + args[0]);
-                    trace("Available commands: ingest-ply, generate-spiral, compress, uncompress");
+                    trace("Available commands: ingest-ply, generate-spiral, compress, uncompress, encapsulate-jda, decapsulate-jda");
             }
         } else {
-            trace("No command provided. Available commands: ingest-ply, generate-spiral, compress, uncompress");
+            trace("No command provided. Available commands: ingest-ply, generate-spiral, compress, uncompress, encapsulate-jda, decapsulate-jda");
             // Default action if no arguments: generate a spiral for convenience
             generateSpiralSplats("assets/spiral.gst");
         }
@@ -141,6 +161,35 @@ class ForgeMain {
             trace("Successfully uncompressed GST file to " + outputGstPath);
         } catch (e:Dynamic) {
             trace('Error uncompressing GST file: ${e}');
+        }
+    }
+
+    static function encapsulateJDA(inputGstPath:String, outputJdaPath:String, assetName:String):Void {
+        trace("Encapsulating GST file: " + inputGstPath + " into JDA: " + outputJdaPath);
+        try {
+            var gstBytes = File.getBytes(inputGstPath);
+            var metadata = {
+                name: assetName,
+                source: inputGstPath,
+                timestamp: Date.now().toString()
+            };
+            var jdaString = JDAFormat.create("GaussianSplat", metadata, gstBytes);
+            File.saveContent(outputJdaPath, jdaString);
+            trace("Successfully encapsulated GST file into JDA: " + outputJdaPath);
+        } catch (e:Dynamic) {
+            trace('Error encapsulating JDA: ${e}');
+        }
+    }
+
+    static function decapsulateJDA(inputJdaPath:String, outputGstPath:String):Void {
+        trace("Decapsulating JDA file: " + inputJdaPath + " to GST: " + outputGstPath);
+        try {
+            var jdaString = File.getContent(inputJdaPath);
+            var jdaData = JDAFormat.extract(jdaString);
+            File.saveBytes(outputGstPath, jdaData.gstBytes);
+            trace("Successfully decapsulated JDA to GST: " + outputGstPath + " (Asset Type: " + jdaData.assetType + ", Name: " + jdaData.metadata.name + ")");
+        } catch (e:Dynamic) {
+            trace('Error decapsulating JDA: ${e}');
         }
     }
 }
