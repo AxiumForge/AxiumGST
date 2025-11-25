@@ -47,4 +47,10 @@ Entries should be organized under relevant categories:
 
 ## Research Entries
 
+### Project Overview: AxiumGST
+**Date**: 2025-11-25
+**Query**: "Gennemgå @docs/AxGST_Project_Gemini.md og læg summary opslag i @RAG.MD"
+**Source**: `docs/AxGST_Project_Gemini.md`
+**Summary**: The AxiumGST project aims to create a high-performance, CLI-driven pipeline for converting, compressing, and rendering Gaussian Splats as native assets within the AxiumForge 3D graphics framework. It combines SDF (Signed Distance Field) with Gaussian Splatting to handle complex, "noisy" real-world data effectively. The project uses Haxe (targeting C++/HL), the Heaps engine, and HXSL for shading. Development follows an "Agile Prompt-to-Code" methodology, with Lars as architect, Gemini as AI lead developer, and DevOps for automation. Key deliverables include the AxiumForge CLI for asset manipulation, an AxiumGST Viewer, and specifications for JDA format and AxSL extension. The project is divided into four phases: Core (PoC), Forge (Data Pipeline), View (Advanced Rendering), and Hybrid (Tracer Light & SDF integration).
+
 <!-- New entries are added below this line -->
