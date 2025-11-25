@@ -52,6 +52,7 @@ Tasks are organized by their current phase:
 - [x] GitHub publication under AxiumForge organization
 - [x] Documentation structure (CHANGELOG, RAG, TODO)
 - [x] Project methodology documentation
+- [x] Git repository cleanup (removed large PDF files from history)
 
 ---
 

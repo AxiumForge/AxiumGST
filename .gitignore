@@ -1,5 +1,6 @@
 # Ignore large reference PDFs to avoid GitHub size limits
-docs/refs/kerbl_2023_3d_gaussian_splatting.pdf
+docs/refs/*.pdf
+*.pdf
 
 # Ignore compiled HL binaries
 bin/*.hl

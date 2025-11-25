@@ -27,9 +27,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - `screenshot.sh`: falls back to multi-display capture if no window id is found; can target a display via `HEAPS_DISPLAY` and now brings the process frontmost before trying the window capture
 
 ### Fixed
+- Git repository cleanup:
+  - Removed large PDF files (111.31 MB `docs/refs/kerbl_2023_3d_gaussian_splatting.pdf`) from git history using `git-filter-repo`
+  - Updated `.gitignore` to exclude all PDF files (`*.pdf`, `docs/refs/*.pdf`) to prevent future size limit issues
+  - Successfully pushed cleaned repository to GitHub
 - Viewer build/runtime:
   - Updated viewer to match Heaps 2.1 API (`h3d.Camera`, `h3d.scene.fwd.DirLight`, cast `LightSystem`)
-  - Added `cube.addNormals()` to avoid forward renderer error “Missing buffer input 'normal'”
+  - Added `cube.addNormals()` to avoid forward renderer error "Missing buffer input 'normal'"
 - Forge CLI: corrected `Sys` import for successful `haxe build.hxml`; confirmed `generate-spiral` produces `assets/spiral.gst` and CLI runs headless (use viewer to inspect output)
 - Viewer HXSL build failure:
   - Dropped external `-lib hxsl` to use Heaps-bundlet HXSL and rewrote `viewer/SplatShader.hx` to extend `hxsl.Shader` with `static var SRC`
