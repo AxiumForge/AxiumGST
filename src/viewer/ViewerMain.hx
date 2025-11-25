@@ -12,18 +12,14 @@ import format.GaussianSplat;
 import sys.io.File;
 
 // New imports for instancing and shader
-import h3d.prim.Instanced;
-import h3d.impl.InstanceBuffer;
-import h3d.Buffer.BufferFormat;
-import h3d.prim.Plane2D;
+import h3d.prim.Grid;
 import viewer.SplatShader; // Our custom shader
 import h3d.Engine; // For screenResolution
 
 class ViewerMain extends App {
     var cameraSpeed = 10.;
     var rotSpeed = 3.;
-    var splatsMesh: Mesh; // To hold our instanced splats
-    var splatShader: SplatShader; // Reference to our shader
+    var splatShaders:Array<SplatShader> = []; // Shaders for each spawned splat
 
     override function init() {
         super.init();
@@ -106,54 +102,37 @@ class ViewerMain extends App {
             trace("Loaded " + gstFormat.splats.length + " splats.");
 
             var instanceCount = gstFormat.splats.length;
-
-            // Define the format for per-instance data: Position (Vec3), Color (Vec4), Scale (Float)
-            var instanceDataFormats = [
-                { name: "instancePos", format: BufferFormat.F32x3, perInstance: true },
-                { name: "instanceColor", format: BufferFormat.F32x4, perInstance: true },
-                { name: "instanceScale", format: BufferFormat.F32, perInstance: true }
-                // Add rotation (Mat4 or Vec4) later if needed for full Gaussian
-            ];
-
-            // Create the InstanceBuffer
-            // 3 floats for pos + 4 floats for color + 1 float for scale = 8 floats per instance
-            var instanceBuffer = new InstanceBuffer(instanceCount, instanceDataFormats);
-            var instanceData = new haxe.ds.Vector<Float>(instanceCount * 8);
-
-            for (i in 0...instanceCount) {
-                var splat = gstFormat.splats[i];
-                var offset = i * 8;
-
-                // Position (Vec3)
-                instanceData[offset + 0] = splat.x;
-                instanceData[offset + 1] = splat.y;
-                instanceData[offset + 2] = splat.z;
-
-                // Color (Vec4) - normalized
-                instanceData[offset + 3] = splat.r / 255.0;
-                instanceData[offset + 4] = splat.g / 255.0;
-                instanceData[offset + 5] = splat.b / 255.0;
-                instanceData[offset + 6] = splat.a / 255.0;
-
-                // Scale (Float) - using splat.scaleX for uniform scale for now
-                instanceData[offset + 7] = splat.scaleX;
+            if (instanceCount == 0) {
+                trace("No splats found in GST file.");
+                return;
             }
-            instanceBuffer.upload(instanceData);
 
-            // Create a simple quad as the base primitive to be instanced
-            var basePrimitive = new Plane2D();
+            var maxSplats = 500; // Hard cap to keep runtime manageable for now
+            var toSpawn = Std.int(Math.min(instanceCount, maxSplats));
+            splatShaders = [];
 
-            // Create the Instanced primitive and link the instance buffer
-            var instancedPrimitive = new Instanced();
-            instancedPrimitive.setMesh(basePrimitive);
-            instancedPrimitive.commands = instanceBuffer;
+            var eng = h3d.Engine.getCurrent();
+            var camMatrix = s3d.camera.m;
 
-            // Create a Mesh to render the instanced primitive
-            splatsMesh = new Mesh(instancedPrimitive, s3d);
+            for (i in 0...toSpawn) {
+                var splat = gstFormat.splats[i];
 
-            // Assign our custom shader
-            splatShader = new SplatShader();
-            splatsMesh.material.mainPass.shader = splatShader;
+                var quad = new Grid(1, 1, 1, 1);
+                quad.addUVs();
+
+                var mesh = new Mesh(quad, s3d);
+                var shader = new SplatShader();
+                shader.center.set(splat.x, splat.y, splat.z);
+                shader.color.set(splat.r / 255.0, splat.g / 255.0, splat.b / 255.0, splat.a / 255.0);
+                shader.scale = splat.scaleX;
+                shader.cameraMatrix = camMatrix;
+                shader.screenResolution.set(eng.width, eng.height);
+
+                mesh.material.mainPass.addShader(shader);
+                splatShaders.push(shader);
+            }
+
+            trace('Spawned ${toSpawn} splats (limited to ${maxSplats}).');
 
         } catch (e:Dynamic) {
             trace('Error loading GST data: ${e}');
@@ -188,9 +167,13 @@ class ViewerMain extends App {
         rotateCamera(yaw, pitch);
 
         // Update shader uniforms
-        if (splatShader != null) {
-            splatShader.cameraMatrix.set(s3d.camera.getViewProj());
-            splatShader.screenResolution.set(s3d.engine.width, s3d.engine.height);
+        if (splatShaders != null && splatShaders.length > 0) {
+            var camMatrix = s3d.camera.m;
+            var eng = h3d.Engine.getCurrent();
+            for (shader in splatShaders) {
+                shader.cameraMatrix = camMatrix;
+                shader.screenResolution.set(eng.width, eng.height);
+            }
         }
     }
     

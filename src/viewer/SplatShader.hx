@@ -6,44 +6,37 @@ class SplatShader extends Shader {
     static var SRC = {
         @input var position: Vec3; // (-0.5, -0.5, 0) to (0.5, 0.5, 0) for a quad
 
-        @input var instancePos: Vec3;
-        @input var instanceColor: Vec4;
-        @input var instanceScale: Float; // Use a single float for uniform scale
-        // @input var instanceRotation: Vec4; // Quaternion for later
+        @param var center: Vec3;
+        @param var color: Vec4;
+        @param var scale: Float; // Use a single float for uniform scale
 
         @param var cameraMatrix: Mat4; // View-Projection Matrix
         @param var screenResolution: Vec2; // Screen width, height
 
         var output: {
+            position: Vec4,
             color: Vec4,
             uv: Vec2
         };
 
-        function __init__() {
-            instanceColor = vec4(1.0, 1.0, 1.0, 1.0);
-            instanceScale = 1.0;
-        }
-
-        @:vertex
         function vertex() {
             // Transform instance position to clip space
-            var clipCenter = vec4(instancePos, 1.0) * cameraMatrix;
+            var clipCenter = vec4(center, 1.0) * cameraMatrix;
 
             // Calculate screen-space size for the quad based on projected scale
             // This is a simplified projection, real Gaussian splatting is more complex
-            var screenScale = instanceScale * 10.0; // Arbitrary factor for visibility
+            var screenScale = scale * 10.0; // Arbitrary factor for visibility
 
             // Offset the quad corners in screen space
             var screenOffset = vec2(position.x * screenScale / screenResolution.x,
                                     position.y * screenScale / screenResolution.y);
 
             // Add screen-space offset to clip-space center
-            out.glPosition = vec4(clipCenter.xy + screenOffset * clipCenter.w, clipCenter.z, clipCenter.w);
-            output.color = instanceColor;
+            output.position = vec4(clipCenter.xy + screenOffset * clipCenter.w, clipCenter.z, clipCenter.w);
+            output.color = color;
             output.uv = position.xy + 0.5; // UVs for a quad (0,0 to 1,1)
         }
 
-        @:fragment
         function fragment() {
             // Simple circle for a Gaussian "splat" for now
             var dist = length(output.uv - 0.5);
@@ -51,5 +44,5 @@ class SplatShader extends Shader {
 
             output.color = vec4(output.color.rgb, output.color.a * alpha);
         }
-    };
+    }
 }

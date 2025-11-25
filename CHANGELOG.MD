@@ -31,6 +31,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   - Updated viewer to match Heaps 2.1 API (`h3d.Camera`, `h3d.scene.fwd.DirLight`, cast `LightSystem`)
   - Added `cube.addNormals()` to avoid forward renderer error “Missing buffer input 'normal'”
 - Forge CLI: corrected `Sys` import for successful `haxe build.hxml`; confirmed `generate-spiral` produces `assets/spiral.gst` and CLI runs headless (use viewer to inspect output)
+- Viewer HXSL build failure:
+  - Dropped external `-lib hxsl` to use Heaps-bundlet HXSL and rewrote `viewer/SplatShader.hx` to extend `hxsl.Shader` with `static var SRC`
+  - Simplified splat rendering: spawn capped set of `Grid` meshes with per-splat shader params (center/color/scale) and camera/screen uniforms updated per-frame; `haxe build.hxml` now succeeds for viewer
 
 ### Notes
 - **Development Environment:** Currently developing on a Mac Intel i9 16GB (2019). The initial development will be "light" to establish a working pipeline.
