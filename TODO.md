@@ -37,9 +37,9 @@ Tasks are organized by their current phase:
 
 ### Active Tasks
 
-- [ ] Etablering af projektstruktur (CLI vs. Viewer).
-- [ ] Definition af binært format (`.gst`).
-- [ ] Generering af syntetiske test-data (Tornado/Spiral).
+- [x] Etablering af projektstruktur (CLI vs. Viewer).
+- [x] Definition af binært format (`.gst`).
+- [x] Generering af syntetiske test-data (Tornado/Spiral).
 - [ ] Simpel Viewer med Point Rendering.
 - [ ] Leverance: En app der viser en roterende punktsky.
 

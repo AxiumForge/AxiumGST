@@ -1,0 +1,24 @@
+# build.hxml
+
+# Common settings for all targets
+-cp src
+-D hxtelemetry
+
+# ==============================================================================
+# Target: Forge (CLI)
+# ==============================================================================
+-main forge.ForgeMain
+-hl bin/forge.hl
+
+--next
+
+# ==============================================================================
+# Target: Viewer (Heaps Application)
+# ==============================================================================
+# Common settings need to be repeated after --next
+-lib heaps
+-lib format
+-lib hlsdl
+-cp src
+-main viewer.ViewerMain
+-hl bin/viewer.hl

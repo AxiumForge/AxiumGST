@@ -18,10 +18,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   - Dynamic task sourcing from `/docs` project documents
   - Iterative loop: Plan → Implement → Test → Review → Deploy → Retrospective
   - Living document that evolves with project understanding
+- `screenshot.sh`: Bundet Mac-script til at capture første vindue for Heaps-proces og gemme i `sc/` (valg af procesnavn via `HEAPS_APP`)
+- `bin/pdf2md.py` and `bin/pdf2md.sh`: PDF extractor that writes per-PDF folders under `docs/refs/<name>/` with `index.md` (per-page text + inline image links) and extracted images in `images/`. Requires `pymupdf` (fitz).
 
 ### Changed
+- `screenshot.sh`: auto-detects running process (`Heaps`/`hl`/`viewer` or `HEAPS_APP` override) before grabbing window
+- `screenshot.sh`: added `--help` usage text and clearer guidance when no viewer process is running
+- `screenshot.sh`: falls back to multi-display capture if no window id is found; can target a display via `HEAPS_DISPLAY` and now brings the process frontmost before trying the window capture
 
 ### Fixed
+- Viewer build/runtime:
+  - Updated viewer to match Heaps 2.1 API (`h3d.Camera`, `h3d.scene.fwd.DirLight`, cast `LightSystem`)
+  - Added `cube.addNormals()` to avoid forward renderer error “Missing buffer input 'normal'”
+- Forge CLI: corrected `Sys` import for successful `haxe build.hxml`; confirmed `generate-spiral` produces `assets/spiral.gst` and CLI runs headless (use viewer to inspect output)
 
 ### Notes
 - **Development Environment:** Currently developing on a Mac Intel i9 16GB (2019). The initial development will be "light" to establish a working pipeline.
