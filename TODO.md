@@ -9,7 +9,7 @@ This TODO follows a **phase-based, iterative DevOps approach** where tasks are m
 1. **Phase-Based Workflow**: We work on one phase at a time, focusing efforts and completing each phase before moving to the next
 2. **Dynamic Task Sourcing**: Tasks are pulled from project documents in `/docs` directory as needed
 3. **Iterative Loop**: Each phase follows an iterative cycle:
-   - Plan ’ Implement ’ Test ’ Review ’ Deploy ’ Retrospective
+   - Plan ï¿½ Implement ï¿½ Test ï¿½ Review ï¿½ Deploy ï¿½ Retrospective
 4. **Living Document**: This TODO is continuously updated as phases evolve and new insights emerge
 
 ### Task Categories
@@ -33,11 +33,15 @@ Tasks are organized by their current phase:
 
 ## Current Phase
 
-**Phase**: [To be defined based on project documents]
+**Phase**: Phase 1: The Core (Proof of Concept)
 
 ### Active Tasks
 
-<!-- Tasks for current phase are listed here -->
+- [ ] Etablering af projektstruktur (CLI vs. Viewer).
+- [ ] Definition af binÃ¦rt format (`.gst`).
+- [ ] Generering af syntetiske test-data (Tornado/Spiral).
+- [ ] Simpel Viewer med Point Rendering.
+- [ ] Leverance: En app der viser en roterende punktsky.
 
 ---
 
